@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>برنامج منسق الشعر</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body background="#F4F5F7" bgcolor="#F4F5F7" dir="rtl">
+  <p align="center"><img alt="q9edh" src="/q9edh/q9edh.png" style="width: 728px; height: 90px;"><br></p>
+  <fieldset>
+    <legend>افصل شطري البيت بعلامة "=" أما إذا كان البيت يتكون من شطر واحد فقط فلا تستخدم هذه العلامة</legend>
+    <div align="center">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <label for="subject"><b>عنوان القصيدة (اختياري):</b></label>
+<textarea cols="36" dir="rtl" id="subject" name="subject" rows="1" style="TEXT-ALIGN: right; width: 70%; font-size: 14px; height: auto;"></textarea>
+
+    <label for="poet"><b>اسم الشاعر (اختياري):</b></label>
+    <input id="poet" name="poet" side="2" size="26" rows="1" style="TEXT-ALIGN: right; width: 70%; font-size: 14px; height: auto;">
+
+    <label for="poetry"><b>أكتب القصيدة هنا:</b></label>
+    <textarea cols="65" dir="rtl" id="poetry" name="poetry" rows="6" style="TEXT-ALIGN: right"></textarea>
+  </div>
+</div>
+
+    <fieldset>
+      <legend>تنسيق الابيات</legend>
+      <div align="center" id="tblPoetry">
+        <div>
+          <table border="0" cellpadding="0" cellspacing="0" dir="rtl" height="88" style="BORDER-COLLAPSE: collapse" width="2">
+            <tbody>
+              <tr>
+                <td nowrap="nowrap"><b><u><b><sup>الفاصل:</sup></b></u> <input dir="ltr" onchange="ibchar=this.value" side="2" size="1" value="..."></b></td>
+                <td nowrap="nowrap" width="33%"><b>&nbsp;</b><sup>شكل:</sup> <select onchange="pType=this.selectedIndex; doJustify();" size="1">
+                  <option selected="selected">
+                    عمودين
+                  </option>
+                  <option>
+                    عمود
+                  </option>
+                </select></td>
+                <td nowrap="nowrap" width="34%"><b>&nbsp;</b><sup>كيفية التنسيق:</sup> <select onchange="pUse=this.selectedIndex; doJustify();" size="1">
+                  <option>
+                    كلمات متباعدة
+                  </option>
+                  <option selected="selected">
+                    كلمات ممتدة
+                  </option>
+                </select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div align="center">
+        <b><button onclick="doJustify()"><b><font size="3">&lt;&lt;تنفيذ</font></b></button></b>
+      </div>
+      <center>
+        <fieldset>
+          <legend>معاينة</legend>
+          <div id="here"></div>
+        </fieldset>
+        <p><b>&nbsp;</b></p>
+        <fieldset>
+          <legend>إنسخ النص</legend>
+          <p id="AderleeCode">
+          <textarea cols="50" id="poetryAderlee" name="poetryAderlee" placeholder="أدخل النص هنا..." rows="6" style="text-align: left; overflow: visible;"></textarea></p><button onclick="copyToClipboard()">نسخ</button>
+        </fieldset>
+      </center>
+      <table border="1" style="VISIBILITY: hidden" width="0">
+        <tbody>
+          <tr>
+            <td id="testWidth" nowrap="nowrap" width="0"><b>Testing</b></td>
+          </tr>
+        </tbody>
+      </table>
+      <script src="copy.js"></script>
+    </fieldset>
+  </fieldset>
+</body>
+</html>
