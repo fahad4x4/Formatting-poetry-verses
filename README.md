@@ -69,7 +69,6 @@ Formatting-poetry-verses/
 ├── index.html    ← the tool's page (form, options, preview, copy box)
 ├── copy.js       ← formatting and justification logic, plus the copy button
 ├── styles.css    ← page styles
-├── q9edh.png     ← banner image shown at the top of the page
 ├── LICENSE       ← GNU GPL v3
 └── README.md
 ```
@@ -155,7 +154,6 @@ Formatting-poetry-verses/
 ├── index.html    ← the tool's page (form, options, preview, copy box)
 ├── copy.js       ← formatting and justification logic, plus the copy button
 ├── styles.css    ← page styles
-├── q9edh.png     ← banner image shown at the top of the page
 ├── LICENSE       ← GNU GPL v3
 └── README.md
 ```
@@ -165,7 +163,6 @@ Formatting-poetry-verses/
 - `index.html`: صفحة الأداة (النموذج والخيارات والمعاينة ومربع النسخ).
 - `copy.js`: منطق التنسيق والمحاذاة وزر النسخ.
 - `styles.css`: تنسيقات الصفحة.
-- `q9edh.png`: صورة الشعار أعلى الصفحة.
 
 ### الرخصة
 
