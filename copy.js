@@ -1,9 +1,23 @@
                 	function copyToClipboard() {
 				    var copyText = document.getElementById("poetryAderlee");
-				    copyText.select();
-				    copyText.setSelectionRange(0, 99999);
-				    document.execCommand("copy");
-				    alert("تم نسخ النص بنجاح: " + copyText.value);
+				    var text = copyText.value;
+				    function copied() {
+				        alert("تم نسخ النص بنجاح: " + text);
+				    }
+				    // Fallback for older browsers / non-secure (http, file://) pages.
+				    function legacyCopy() {
+				        copyText.select();
+				        copyText.setSelectionRange(0, text.length);
+				        var ok = false;
+				        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+				        if (ok) copied();
+				        else alert("تعذّر النسخ تلقائياً، حدّد النص وانسخه يدوياً.");
+				    }
+				    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+				        navigator.clipboard.writeText(text).then(copied, legacyCopy);
+				    } else {
+				        legacyCopy();
+				    }
 				}
 
 					      var side, side1, side2, spaceWidth, extendWidth, dif, toolfix;
@@ -66,8 +80,44 @@
 					              return t;
 					      }
 
+					      // Renders the few markup tokens this script itself generates (<br>,
+					      // <div align=center>, </div>, the hidden letter-spacing span and &nbsp;)
+					      // as DOM nodes. Everything else -- including all user-typed text, the
+					      // separator, title and poet name -- becomes text nodes, never HTML.
+					      function renderSafe(el, str) {
+					              while (el.firstChild) el.removeChild(el.firstChild);
+					              var re = /<br>|<div align=center>|<\/div>|<span[ ^]style='(font-size:1pt;letter-spacing:(?:normal|[-+0-9.eE]+pt(?:&nbsp;| )?);visibility:hidden;)'><\/span>|&nbsp;/gi;
+					              var parent = el, last = 0, buf = "", m, tok, node;
+					              function flush() {
+					                      if (buf != "") { parent.appendChild(document.createTextNode(buf)); buf = ""; }
+					              }
+					              while ((m = re.exec(str)) !== null) {
+					                      buf += str.substring(last, m.index);
+					                      last = re.lastIndex;
+					                      tok = m[0].toLowerCase();
+					                      if (tok == "&nbsp;") { buf += "\u00a0"; continue; }
+					                      flush();
+					                      if (tok == "<br>") {
+					                              parent.appendChild(document.createElement("br"));
+					                      } else if (tok == "</div>") {
+					                              if (parent != el) parent = parent.parentNode;
+					                      } else if (tok.indexOf("<div") == 0) {
+					                              node = document.createElement("div");
+					                              node.setAttribute("align", "center");
+					                              parent.appendChild(node);
+					                              parent = node;
+					                      } else {
+					                              node = document.createElement("span");
+					                              node.setAttribute("style", m[1].replace(/&nbsp;/gi, "\u00a0"));
+					                              parent.appendChild(node);
+					                      }
+					              }
+					              buf += str.substring(last);
+					              flush();
+					      }
+
 					      function textWidth(t) {
-					              testWidth.innerHTML= t.replace(/ /gi, "&nbsp;");
+					              renderSafe(testWidth, t.replace(/ /gi, "&nbsp;"));
 					              return ((testWidth.clientWidth - 2) * 0.75);
 					      }
 
@@ -177,7 +227,7 @@
 					      function doJustify () {
 					              var L, R, MTW, i, j, cr, txt;
 					              toolfix = "<span style='font-size:1pt;letter-spacing:normal;visibility:hidden;'><\/span>";
-					              testWidth.innerHTML = toolfix;
+					              renderSafe(testWidth, toolfix);
 					              dif = (testWidth.clientWidth - 2) * 0.75;
 					              toolfix = toolfix.replace(/ /g,"^");
 					              testWidth.style.font = (fitalic?"italic":"normal")+" normal "+(fbold?"bold ":"normal ")+fsize+"pt "+fname+","+defaultFont;
@@ -277,7 +327,6 @@
 					              HTML2 += "";
 
 					              here.align = pAlign;
-					              here.innerHTML = HTML.replace(/<\/?[^btd][^>]+>/gi,'');
 
 					      //      here.style.fontFamily           = '"lucida grande",tahoma,verdana,arial,sans-serif';
 					              here.style.fontFamily           = fname;
@@ -292,7 +341,7 @@
 					              here.style.fontStyle            = "normal";
 					              here.style.direction            = "rtl";
 					              here.style.padding                      = "4px";
-					              here.innerHTML = HTML2.replace(/\n/gi,'<br>');
+					              renderSafe(here, HTML2.replace(/\n/gi,'<br>'));
 					              poetryAderlee.value = HTML2.replace(/<br>/gi,'\r\n').replace(/&nbsp;/gi,' ').replace(/<\/?s[^>]+>/gi,'').replace(/<di[^>]+>/gi,'').replace(/<\/di[^>]+>/gi,'\n');
 					              poetryAderlee.value = trim(poetryAderlee.value);
 					      //      poetryAderlee.style.font                        = "" + fsize + " " + fname + " " + (fbold?"bold ":"normal") + " " + (fitalic?"italic":"normal");
